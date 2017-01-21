@@ -1,4 +1,4 @@
-# AWS ECR proxy anonymous registry.
+# AWS ECR anonymous proxy
 
 Based on official nginx alpine.
 
