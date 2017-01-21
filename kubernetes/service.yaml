@@ -1,0 +1,18 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    name: aws-ecr
+  name: aws-ecr
+  namespace: kube-system
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 443
+  selector:
+    name: aws-ecr
