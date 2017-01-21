@@ -34,8 +34,6 @@ spec:
             value: 'YOUR_AWS_SECRET'
           - name: REGION
             value: "YOUR_REGION"
-          - name: REGISTRY_URL
-            value: "YOUR_REGISTRY_FULL_URL"
         resources:
           limits:
             cpu: 300m
