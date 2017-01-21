@@ -3,8 +3,8 @@ kind: Service
 apiVersion: v1
 metadata:
   labels:
-    name: aws-ecr
-  name: aws-ecr
+    name: aws-ecr-proxy
+  name: aws-ecr-proxy
   namespace: kube-system
 spec:
   ports:
@@ -15,4 +15,4 @@ spec:
     port: 443
     targetPort: 443
   selector:
-    name: aws-ecr
+    name: aws-ecr-proxy
