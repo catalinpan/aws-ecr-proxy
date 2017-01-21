@@ -1,0 +1,45 @@
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    name: aws-ecr
+  name: aws-ecr
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: aws-ecr
+  template:
+    metadata:
+      labels:
+        name:  aws-ecr
+    spec:
+      containers:
+      - name: aws-ecr
+        image: catalinpan/aws-ecr-proxy
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http
+        - containerPort: 443
+          protocol: TCP
+          name: https
+        env:
+          - name: AWS_KEY
+            value: 'YOUR_AWS_KEY'
+          - name: AWS_SECRET
+            value: 'YOUR_AWS_SECRET'
+          - name: REGION
+            value: "YOUR_REGION"
+          - name: REGISTRY_URL
+            value: "YOUR_REGISTRY_FULL_URL"
+        resources:
+          limits:
+            cpu: 300m
+            memory: 256Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
