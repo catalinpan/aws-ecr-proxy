@@ -10,6 +10,10 @@ AWS_KEY
 AWS_SECRET
 REGION
 ```
+Other variables:
+```
+RENEW_TOKEN - default 6h
+```
 or mount .aws/config file with all the required configurations. (more details below)
 ## Docker run:
 ##### Without ssl
@@ -60,3 +64,5 @@ openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout default.key -out de
 ## Kubernetes example
 The configuration provided will require valid ssl certificates or to be behind a load balancer with valid ssl.
 The configuration can be changed to get aws_config and ssl certificates as secrets.
+
+Kubernetes deployment contains also a health check.

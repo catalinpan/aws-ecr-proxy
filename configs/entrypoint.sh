@@ -23,4 +23,6 @@ reg_url=$(aws ecr get-login | awk '{print $9}')
 sed -i "s|${auth%??}|${auth_n}|g" ${nx_conf}
 sed -i "s|REGISTRY_URL|$reg_url|g" ${nx_conf}
 
+/renew_token.sh &
+
 exec "$@"
