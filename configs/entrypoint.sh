@@ -2,17 +2,26 @@
 
 nx_conf=/etc/nginx/nginx.conf
 
-if [[ "$REGION" != "" && "$AWS_KEY" != "" && "$AWS_SECRET" != "" ]]; then
+MYREGION=$(wget -q -O- http://169.254.169.254/latest/dynamic/instance-identity/document|grep 'region'|cut -d'"' -f4)
+
+REGION=${REGION:-$MYREGION}
+
 # create aws directory
 mkdir -p /root/.aws
 
-echo "***REMOVED***
+cat << EOF > /root/.aws/config
+***REMOVED***
 region = $REGION
-aws_access_key_id = $AWS_KEY
-aws_secret_access_key = $AWS_SECRET" > /root/.aws/config
+EOF
+
+if [[ "$AWS_KEY" != "" && "$AWS_SECRET" != "" ]]; then
+	cat << EOF >> /root/.aws/config
+	aws_access_key_id = $AWS_KEY
+	aws_secret_access_key = $AWS_SECRET"
+EOF
+fi
 
 chmod 600 -R /root/.aws
-fi
 
 # update the auth token
 auth=$(grep  X-Forwarded-User ${nx_conf} | awk '{print $4}'| uniq|tr -d "\n\r")
