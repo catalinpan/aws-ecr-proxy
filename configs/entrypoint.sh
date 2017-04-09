@@ -2,32 +2,44 @@
 
 nx_conf=/etc/nginx/nginx.conf
 
-MYREGION=$(wget -q -O- http://169.254.169.254/latest/dynamic/instance-identity/document|grep 'region'|cut -d'"' -f4)
+AWS_IAM='http://169.254.169.254/latest/dynamic/instance-identity/document'
+AWS_FOLDER='/root/.aws'
 
-REGION=${REGION:-$MYREGION}
+region_config() {
+  echo  "region = $@" >> /root/.aws/config
+}
 
-# create aws directory
-mkdir -p /root/.aws
+if [[ "$AWS_KEY" != "" && "$AWS_SECRET" != "" ]]
+then
+  mkdir -p ${AWS_FOLDER}
+  echo "***REMOVED***
+aws_access_key_id = $AWS_KEY
+aws_secret_access_key = $AWS_SECRET" > ${AWS_FOLDER}/config
 
-cat << EOF > /root/.aws/config
-***REMOVED***
-region = $REGION
-EOF
-
-if [[ "$AWS_KEY" != "" && "$AWS_SECRET" != "" ]]; then
-	cat << EOF >> /root/.aws/config
-	aws_access_key_id = $AWS_KEY
-	aws_secret_access_key = $AWS_SECRET"
-EOF
+	if [[ "$REGION" != "" ]]
+	then
+	  region_config $REGION
+# check if the region can be pulled from AWS IAM
+	elif wget -q -O- ${AWS_IAM} | grep -q 'region'
+	then
+		REGION=$(wget -q -O- ${AWS_IAM} | grep 'region'|cut -d'"' -f4)
+		region_config $REGION
+# error exit
+	else
+		echo "No region detected"
+		exit 1
+	fi
+# fix the permissions
+chmod 600 -R ${AWS_FOLDER}
 fi
 
-chmod 600 -R /root/.aws
 
 # update the auth token
+aws_cli_exec=$(aws ecr get-login)
 auth=$(grep  X-Forwarded-User ${nx_conf} | awk '{print $4}'| uniq|tr -d "\n\r")
-token=$(aws ecr get-login | awk '{print $6}')
+token=$(echo "${aws_cli_exec}" | awk '{print $6}')
 auth_n=$(echo AWS:${token}  | base64 |tr -d "[:space:]")
-reg_url=$(aws ecr get-login | awk '{print $9}')
+reg_url=$(echo "${aws_cli_exec}" | awk '{print $9}')
 
 sed -i "s|${auth%??}|${auth_n}|g" ${nx_conf}
 sed -i "s|REGISTRY_URL|$reg_url|g" ${nx_conf}
