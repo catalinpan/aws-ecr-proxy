@@ -10,11 +10,13 @@ AWS_KEY
 AWS_SECRET
 REGION
 ```
+Note: For AWS instances if the region is not declared it will be auto discovered from IAM as long as the instance supports that. [pull request](https://github.com/catalinpan/aws-ecr-proxy/pull/1/commits/899ef1a80a7fa141f66e500a76f6ed86f8d19f4e), [commit](https://github.com/catalinpan/aws-ecr-proxy/commit/d8a709bf043cfd14b88defae738833e93c946f4b). If the credentials are mounted as a volume or secret the REGION needs to be present in the config file.
+
 Other variables:
 ```
 RENEW_TOKEN - default 6h
 ```
-or mount .aws/config file with all the required configurations. (more details below)
+or mount ~/.aws/config file with all the required configurations. (more details below)
 ## Docker run:
 ##### Without ssl
 This will require either to add insecure registry URL or a load balancer with valid ssl certificates.
