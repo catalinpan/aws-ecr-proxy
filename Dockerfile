@@ -1,13 +1,10 @@
-FROM nginx:1.11.10-alpine
+FROM nginx:1.12.0-alpine
 
 RUN apk -v --update add \
         python \
         py-pip \
-        groff \
-        less \
-        mailcap \
         && \
-    pip install --upgrade awscli s3cmd python-magic && \
+    pip install --upgrade pip awscli==1.11.92 && \
     apk -v --purge del py-pip && \
     rm /var/cache/apk/*
 

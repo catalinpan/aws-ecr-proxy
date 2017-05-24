@@ -35,11 +35,11 @@ fi
 
 
 # update the auth token
-aws_cli_exec=$(aws ecr get-login)
+aws_cli_exec=$(aws ecr get-login --no-include-email)
 auth=$(grep  X-Forwarded-User ${nx_conf} | awk '{print $4}'| uniq|tr -d "\n\r")
 token=$(echo "${aws_cli_exec}" | awk '{print $6}')
 auth_n=$(echo AWS:${token}  | base64 |tr -d "[:space:]")
-reg_url=$(echo "${aws_cli_exec}" | awk '{print $9}')
+reg_url=$(echo "${aws_cli_exec}" | awk '{print $7}')
 
 sed -i "s|${auth%??}|${auth_n}|g" ${nx_conf}
 sed -i "s|REGISTRY_URL|$reg_url|g" ${nx_conf}
