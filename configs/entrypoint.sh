@@ -25,7 +25,7 @@ fix_perm() {
     chmod 600 -R ${AWS_FOLDER}
 }
 
-# test if region is mount as secret
+# test if region is mounted as secret
 if test_config region
 then
     echo "region found in ~/.aws mounted as secret"
@@ -39,7 +39,7 @@ then
 elif test_iam
 then
     echo "region detected from iam"
-    REGION=$(test_iam |cut -d'"' -f4)
+    REGION=$(wget -q -O- ${AWS_IAM} | grep -q 'region' |cut -d'"' -f4)
     header_config
     region_config $REGION
     fix_perm
@@ -48,7 +48,7 @@ else
   exit 1
 fi
 
-# test if key and secret are mount as secret
+# test if key and secret are mounted as secret
 if test_config aws_access_key_id
 then
     echo "aws key and secret found in ~/.aws mounted as secrets"
@@ -58,8 +58,8 @@ then
     echo "aws_access_key_id = $AWS_KEY
 aws_secret_access_key = $AWS_SECRET" >> ${AWS_FOLDER}/config
     fix_perm
-# if the key and secret are not mount as secrets
-elif ! test_config aws_access_key_id && test_iam
+# if the key and secret are not mounted as secrets
+elif test_iam
 then
     echo "key and secret not available in ~/.aws/"
     if aws ecr get-authorization-token | grep expiresAt
