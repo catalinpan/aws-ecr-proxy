@@ -14,11 +14,11 @@ REGION
 RENEW_TOKEN - default 6h
 ```
 
-##### AWS instance with IAM role
+### AWS instance with IAM role
 
 For AWS instances if the region is not declared it will be auto discovered from IAM as long as the instance supports that. [pull request](https://github.com/catalinpan/aws-ecr-proxy/pull/1/commits/899ef1a80a7fa141f66e500a76f6ed86f8d19f4e), [commit](https://github.com/catalinpan/aws-ecr-proxy/commit/d8a709bf043cfd14b88defae738833e93c946f4b).
 
-The AWS key and secret can be also configured using a IAM role (without mounting them secrets or specifying them as variables). A sample IAM role config can be found in examples folder. More details on the [AWS official documentation](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html).
+The AWS key and secret can be also configured using a IAM role (without mounting them secrets or specifying them as variables). A sample IAM role config can be found in the examples folder. More details on the [AWS official documentation](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html).
 
 The configs will be checked in the following order:
 
