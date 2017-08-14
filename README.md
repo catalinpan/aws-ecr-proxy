@@ -4,13 +4,15 @@ Based on official nginx alpine.
 
 The container will renew the aws token every 6 hours.
 
-Variables required:
+Variables:
 ```
 AWS_KEY
 AWS_SECRET
 REGION
 ```
 Note: For AWS instances if the region is not declared it will be auto discovered from IAM as long as the instance supports that. [pull request](https://github.com/catalinpan/aws-ecr-proxy/pull/1/commits/899ef1a80a7fa141f66e500a76f6ed86f8d19f4e), [commit](https://github.com/catalinpan/aws-ecr-proxy/commit/d8a709bf043cfd14b88defae738833e93c946f4b). If the credentials are mounted as a volume or secret the REGION needs to be present in the config file.
+
+The AWS key and secret can be also configured using a IAM role. A sample config can be found in examples folder. More details can be found [here](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html).
 
 Other variables:
 ```
