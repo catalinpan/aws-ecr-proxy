@@ -39,7 +39,7 @@ then
 elif test_iam
 then
     echo "region detected from iam"
-    REGION=$(wget -q -O- ${AWS_IAM} | grep -q 'region' |cut -d'"' -f4)
+    REGION=$(wget -q -O- ${AWS_IAM} | grep 'region' |cut -d'"' -f4)
     header_config
     region_config $REGION
     fix_perm
