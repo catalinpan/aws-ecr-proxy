@@ -1,15 +1,10 @@
----
-kind: Deployment
+kind: DaemonSet
 apiVersion: extensions/v1beta1
 metadata:
   labels:
     name: aws-ecr-proxy
   name: aws-ecr-proxy
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      name: aws-ecr-proxy
   template:
     metadata:
       labels:
@@ -20,12 +15,14 @@ spec:
         image: catalinpan/aws-ecr-proxy
         imagePullPolicy: IfNotPresent
         ports:
+        - containerPort: 443
+# the port can be changed to anything else
+          hostPort: 5000
+          protocol: TCP
+          name: https
         - containerPort: 80
           protocol: TCP
           name: http
-        - containerPort: 443
-          protocol: TCP
-          name: https
         env:
           - name: AWS_KEY
             value: 'YOUR_AWS_KEY'
