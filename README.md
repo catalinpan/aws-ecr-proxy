@@ -84,7 +84,12 @@ openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout default.key -out de
 ```
 
 ## Kubernetes example
-The configuration provided will require valid ssl certificates or to be behind a load balancer with valid ssl.
-The configuration can be changed to get aws_config and ssl certificates as secrets.
 
-Kubernetes deployment contains also a health check.
+Kubernetes examples contain also a health check.
+The configs can be changed to get aws_config and ssl certificates as secrets.
+
+#### Deployment and service
+The configuration provided will require valid ssl certificates or to be behind a load balancer with valid ssl.
+
+#### DaemonSet
+The daemonSet will be available on all the nodes. Deployments can use ```127.0.0.1:5000/container_name:tag``` instead of ```FQDN/container_name:tag```
