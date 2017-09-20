@@ -13,6 +13,9 @@ AWS_SECRET
 REGION
 RENEW_TOKEN - default 6h
 ```
+### Health check 
+
+To check the health of the container/registry use ```FQDN/ping``` which will give you the heath of the registry with the correct status code. 
 
 ### AWS instance with IAM role
 
