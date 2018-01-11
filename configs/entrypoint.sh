@@ -4,7 +4,8 @@ nx_conf=/etc/nginx/nginx.conf
 
 AWS_IAM='http://169.254.169.254/latest/dynamic/instance-identity/document'
 AWS_FOLDER='/root/.aws'
-RESOLVER=$(cat /etc/resolv.conf | grep "nameserver" | awk '{print $2}' | tr '\n' ' ')
+# set nginx resolvers from resolv.conf plus google public dns http://nginx.org/en/docs/http/ngx_http_core_module.html#resolver
+RESOLVER="$(cat /etc/resolv.conf | grep "nameserver" | awk '{print $2}' | tr '\n' ' ') 8.8.8.8 8.8.4.4"
 
 header_config() {
     mkdir -p ${AWS_FOLDER}
