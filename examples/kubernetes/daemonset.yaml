@@ -16,8 +16,6 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 443
-# the port can be changed to anything else
-          hostPort: 5000
           protocol: TCP
           name: https
         - containerPort: 80
@@ -46,3 +44,24 @@ spec:
           requests:
             cpu: 50m
             memory: 32Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: aws-ecr-proxy
+  name: aws-ecr-proxy
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+# pull containers from 127.0.0.1:32080/
+      nodePort: 32080
+    - name: https
+      port: 443
+      targetPort: 443
+      nodePort: 32443
+  selector:
+    name: aws-ecr-proxy

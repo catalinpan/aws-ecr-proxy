@@ -49,3 +49,20 @@ spec:
           requests:
             cpu: 50m
             memory: 32Mi
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    name: aws-ecr-proxy
+  name: aws-ecr-proxy
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 443
+  selector:
+    name: aws-ecr-proxy

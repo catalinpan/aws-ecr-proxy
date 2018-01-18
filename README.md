@@ -12,7 +12,9 @@ AWS_KEY
 AWS_SECRET
 REGION
 RENEW_TOKEN - default 6h
+RESOLVER
 ```
+[More details about RESOLVER](http://nginx.org/en/docs/http/ngx_http_core_module.html#resolver)
 
 ### AWS instance with IAM role
 
@@ -92,4 +94,4 @@ The configs can be changed to get aws_config and ssl certificates as secrets.
 The configuration provided will require valid ssl certificates or to be behind a load balancer with valid ssl.
 
 #### DaemonSet
-The daemonSet will be available on all the nodes. Deployments can use ```127.0.0.1:5000/container_name:tag``` instead of ```FQDN/container_name:tag```
+The daemonSet will be available on all the nodes. Deployments can use ```127.0.0.1:32080/container_name:tag``` instead of ```FQDN/container_name:tag```
