@@ -4,8 +4,6 @@ nx_conf=/etc/nginx/nginx.conf
 
 AWS_IAM='http://169.254.169.254/latest/dynamic/instance-identity/document'
 AWS_FOLDER='/root/.aws'
-# set nginx resolvers from resolv.conf plus google public dns http://nginx.org/en/docs/http/ngx_http_core_module.html#resolver
-RESOLVER="$(cat /etc/resolv.conf | grep "nameserver" | awk '{print $2}' | tr '\n' ' ') 8.8.8.8 8.8.4.4"
 
 header_config() {
     mkdir -p ${AWS_FOLDER}
@@ -26,6 +24,13 @@ test_config() {
 fix_perm() {
     chmod 600 -R ${AWS_FOLDER}
 }
+
+# http://nginx.org/en/docs/http/ngx_http_core_module.html#resolver
+# if no resolver is declared and no nameservers are found in resolv.conf, nginx container will default to google dns 8.8.8.8 8.8.4.4 which is nginx base container default behaviour
+if [ ! ${RESOLVER} ]
+then
+    RESOLVER="$(cat /etc/resolv.conf | grep "nameserver" | awk '{print $2}' | tr '\n' ' ')"
+fi
 
 # test if region is mounted as secret
 if test_config region
