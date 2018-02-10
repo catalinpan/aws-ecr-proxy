@@ -26,11 +26,14 @@ fix_perm() {
 }
 
 # http://nginx.org/en/docs/http/ngx_http_core_module.html#resolver
-# if no resolver is declared and no nameservers are found in resolv.conf, nginx container will default to google dns 8.8.8.8 8.8.4.4 which is nginx base container default behaviour
-if [ ! ${RESOLVER} ]
-then
-    RESOLVER="$(cat /etc/resolv.conf | grep "nameserver" | awk '{print $2}' | tr '\n' ' ')"
-fi
+# if no resolver is declared the container will default to google dns 8.8.8.8 8.8.4.4
+case "$RESOLVER" in
+    host)
+        resolver="$(cat /etc/resolv.conf | grep "nameserver" | awk '{print $2}' | tr '\n' ' ')"
+        ;;
+    *)
+        resolver=${RESOLVER:-8.8.8.8 8.8.4.4}
+esac
 
 # test if region is mounted as secret
 if test_config region
@@ -87,7 +90,7 @@ reg_url=$(echo "${aws_cli_exec}" | awk '{print $7}')
 
 sed -i "s|${auth%??}|${auth_n}|g" ${nx_conf}
 sed -i "s|REGISTRY_URL|$reg_url|g" ${nx_conf}
-sed -i "s|RESOLVER|${RESOLVER}|g" ${nx_conf}
+sed -i "s|RESOLVER|${resolver}|g" ${nx_conf}
 
 /renew_token.sh &
 

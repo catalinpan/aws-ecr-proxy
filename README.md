@@ -14,6 +14,13 @@ REGION
 RENEW_TOKEN - default 6h
 RESOLVER
 ```
+RESOLVER default values - google DNS (8.8.8.8 and 8.8.4.4).  
+Available values are:
+- host - uses the nameservers from the container resolv.conf - RESOLVER=host
+- custom value - provide an IP address - RESOLVER=IP_ADDRESS
+
+> RESOLVER is not mandatory, use custom RESOLVER in case the DNS is blocked on your organisation
+
 [More details about RESOLVER](http://nginx.org/en/docs/http/ngx_http_core_module.html#resolver)
 
 ### AWS instance with IAM role
