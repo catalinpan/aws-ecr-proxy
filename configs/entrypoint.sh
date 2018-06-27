@@ -72,7 +72,12 @@ else
 fi
 
 # update the auth token
-aws_cli_exec=$(aws ecr get-login --no-include-email)
+if [ "$REGISTRY_ID" = "" ]
+then 
+    aws_cli_exec=$(aws ecr get-login --no-include-email)
+else
+    aws_cli_exec=$(aws ecr get-login --no-include-email --registry-ids $REGISTRY_ID)
+fi
 auth=$(grep  X-Forwarded-User ${nx_conf} | awk '{print $4}'| uniq|tr -d "\n\r")
 token=$(echo "${aws_cli_exec}" | awk '{print $6}')
 auth_n=$(echo AWS:${token}  | base64 |tr -d "[:space:]")
