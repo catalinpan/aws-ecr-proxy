@@ -12,7 +12,9 @@ AWS_KEY
 AWS_SECRET
 REGION
 RENEW_TOKEN - default 6h
+REGISTRY_ID - optional, used for cross account access
 ```
+
 ### Health check 
 
 To check the health of the container/registry use ```FQDN/ping``` which will give you the heath of the registry with the correct status code. 
