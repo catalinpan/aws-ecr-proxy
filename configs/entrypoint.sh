@@ -3,14 +3,18 @@
 nx_conf=/etc/nginx/nginx.conf
 
 AWS_IAM='http://169.254.169.254/latest/dynamic/instance-identity/document'
-AWS_FOLDER='/root/.aws'
+if [[ -n "$AWS_CONFIG_FILE" ]]; then
+    AWS_FOLDER=$(dirname $AWS_CONFIG_FILE)
+else
+    AWS_FOLDER='/root/.aws'
+fi
 
 header_config() {
     mkdir -p ${AWS_FOLDER}
-    echo "***REMOVED***" > /root/.aws/config
+    echo "***REMOVED***" > $AWS_FOLDER/config
 }
 region_config() {
-    echo  "region = $@" >> /root/.aws/config
+    echo  "region = $@" >> $AWS_FOLDER/config
 }
 
 test_iam() {
@@ -28,7 +32,7 @@ fix_perm() {
 # test if region is mounted as secret
 if test_config region
 then
-    echo "region found in ~/.aws mounted as secret"
+    echo "region found in $AWS_FOLDER mounted as secret"
 # configure regions if variable specified at run time
 elif [[ "$REGION" != "" ]]
 then
@@ -51,7 +55,7 @@ fi
 # test if key and secret are mounted as secret
 if test_config aws_access_key_id
 then
-    echo "aws key and secret found in ~/.aws mounted as secrets"
+    echo "aws key and secret found in $AWS_FOLDER mounted as secrets"
 # if both key and secret are declared
 elif [[ "$AWS_KEY" != "" && "$AWS_SECRET" != "" ]]
 then
@@ -60,7 +64,7 @@ aws_secret_access_key = $AWS_SECRET" >> ${AWS_FOLDER}/config
     fix_perm
 # if the key and secret are not mounted as secrets
 else
-    echo "key and secret not available in ~/.aws/"
+    echo "key and secret not available in $AWS_FOLDER"
     if aws ecr get-authorization-token | grep expiresAt
     then
         echo "iam role configured to allow ecr access"
