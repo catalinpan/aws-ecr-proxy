@@ -11,7 +11,7 @@ fi
 
 header_config() {
     mkdir -p ${AWS_FOLDER}
-    echo "***REMOVED***" > $AWS_FOLDER/config
+    echo "[default]" > $AWS_FOLDER/config
 }
 region_config() {
     echo  "region = $@" >> $AWS_FOLDER/config
@@ -88,6 +88,13 @@ reg_url=$(echo "${aws_cli_exec}" | awk '{print $7}')
 
 sed -i "s|${auth%??}|${auth_n}|g" ${nx_conf}
 sed -i "s|REGISTRY_URL|$reg_url|g" ${nx_conf}
+
+if [[ -n "$SECURITY_CONTROL_CONFIGS" ]]; then
+    sed -i "s|INCLUDE_SECURITY|include $SECURITY_CONTROL_CONFIGS;|g" ${nx_conf}
+else
+    sed -i "s|INCLUDE_SECURITY||g" ${nx_conf}
+fi
+
 
 /renew_token.sh &
 

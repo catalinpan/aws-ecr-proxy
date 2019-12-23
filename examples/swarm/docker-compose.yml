@@ -2,11 +2,11 @@ version: '3.7'
 
 services:
   ecr-proxy:
-    image: catalinpan/aws-ecr-proxy
+    image: myaser/ecr-proxy:1.3.0
     ports:
       - published: 80
         target: 80
-      - published: 4430
+      - published: 443
         target: 443
     healthcheck:
       test: wget http://localhost/ping -q -O - || exit 1
@@ -18,8 +18,12 @@ services:
       - source: ecr_config_file
         target: config
         mode: 600
+    configs:
+      - source: ecr_security_contorls
+        target: /etc/nginx/security_controls
     environment:
       - AWS_CONFIG_FILE=/run/secrets/config
+      - SECURITY_CONTROL_CONFIGS=/etc/nginx/security_controls
     deploy:
       replicas: 1
       restart_policy:
@@ -34,3 +38,7 @@ services:
 secrets:
   ecr_config_file:
     file: ./aws_config
+
+configs:
+  ecr_security_contorls:
+    file: ./security_controls

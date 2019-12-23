@@ -58,7 +58,7 @@ The configuration should look like below example.
 cat ~/.aws/config
 ```
 ```
-***REMOVED***
+[default]
 # region example eu-west-1
 region = REGION     
 aws_access_key_id = YOUR_AWS_KEY
