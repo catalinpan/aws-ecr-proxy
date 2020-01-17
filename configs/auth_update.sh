@@ -8,8 +8,8 @@ if [ "$REGISTRY_ID" = "" ]
 then
     token=$(aws ecr get-login --no-include-email | awk '{print $6}')
 else
-    token=$(aws ecr get-login --no-include-email --registry-ids $REGISTRY_ID | awk '{print $6}')
+    token=$(aws ecr get-login --no-include-email --registry-ids "${REGISTRY_ID}" | awk '{print $6}')
 fi
-auth_n=$(echo AWS:${token}  | base64 |tr -d "[:space:]")
+auth_n=$(echo "AWS:${token}"  | base64 |tr -d "[:space:]")
 
 sed -i "s|${auth%??}|${auth_n}|g" ${nx_conf}
