@@ -54,14 +54,14 @@ PATCH=$(echo "${VERSION}" | awk -F '.' '{print $3}')
 docker login
 
 if [ -n "${PUSH_LATEST}" ]; then
-    docker tag "${NAME}:${VERSION}" "${REGISTRY}/${NAME}:latest"
-    docker push "${REGISTRY}/${NAME}:latest"
+    docker tag "${NAME}:${VERSION}" "${NAME}:latest"
+    docker push "${NAME}:latest"
 fi
 
-docker tag "${NAME}:${VERSION}" "${REGISTRY}/${NAME}:${MAJOR}.${MINOR}.${PATCH}"
-docker tag "${NAME}:${VERSION}" "${REGISTRY}/${NAME}:${MAJOR}.${MINOR}"
-docker tag "${NAME}:${VERSION}" "${REGISTRY}/${NAME}:${MAJOR}"
+docker tag "${NAME}:${VERSION}" "${NAME}:${MAJOR}.${MINOR}.${PATCH}"
+docker tag "${NAME}:${VERSION}" "${NAME}:${MAJOR}.${MINOR}"
+docker tag "${NAME}:${VERSION}" "${NAME}:${MAJOR}"
 
-docker push "${REGISTRY}/${IMAGE_NAME}:${MAJOR}.${MINOR}.${PATCH}"
-docker push "${REGISTRY}/${IMAGE_NAME}:${MAJOR}.${MINOR}"
-docker push "${REGISTRY}/${IMAGE_NAME}:${MAJOR}"
+docker push "${NAME}:${MAJOR}.${MINOR}.${PATCH}"
+docker push "${NAME}:${MAJOR}.${MINOR}"
+docker push "${NAME}:${MAJOR}"
