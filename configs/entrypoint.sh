@@ -80,8 +80,9 @@ then
     exit 1
 fi
 
+# Pick the right NGinx configuration file
 echo "Docker registry version is ${DOCKER_REGISTRY_VERSION}"
-cp /etc/nginx/nginx-docker-registry-v${DOCKER_REGISTRY_VERSION}.conf ${nx_conf}
+cat /etc/nginx/nginx-docker-registry-v${DOCKER_REGISTRY_VERSION}.conf > ${nx_conf}
 
 # update the auth token
 if [ "$REGISTRY_ID" = "" ]
@@ -95,8 +96,13 @@ token=$(echo "${aws_cli_exec}" | awk '{print $6}')
 auth_n=$(echo "AWS:${token}"  | base64 |tr -d "[:space:]")
 reg_url=$(echo "${aws_cli_exec}" | awk '{print $7}')
 
-sed -i "s|${auth%??}|${auth_n}|g" ${nx_conf}
-sed -i "s|REGISTRY_URL|$reg_url|g" ${nx_conf}
+# We use a '.new' file to prevent errors like this one.
+#     'sed: can't move '/etc/nginx/nginx.confhgFhDa' to '/etc/nginx/nginx.conf': Resource busy'
+cp ${nx_conf} ${nx_conf}.new
+sed -i "s|${auth%??}|${auth_n}|g" ${nx_conf}.new
+sed -i "s|REGISTRY_URL|$reg_url|g" ${nx_conf}.new
+echo "" > ${nx_conf}
+cat ${nx_conf}.new > ${nx_conf}
 
 /renew_token.sh &
 
