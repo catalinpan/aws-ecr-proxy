@@ -48,26 +48,13 @@ else
   exit 1
 fi
 
-# test if key and secret are mounted as secret
-if test_config aws_access_key_id
+
+if aws ecr get-authorization-token | grep expiresAt
 then
-    echo "aws key and secret found in ~/.aws mounted as secrets"
-# if both key and secret are declared
-elif [[ "$AWS_KEY" != "" && "$AWS_SECRET" != "" ]]
-then
-    echo "aws_access_key_id = $AWS_KEY
-aws_secret_access_key = $AWS_SECRET" >> ${AWS_FOLDER}/config
-    fix_perm
-# if the key and secret are not mounted as secrets
+    echo "IAM role configured to allow ECR access."
 else
-    echo "key and secret not available in ~/.aws/"
-    if aws ecr get-authorization-token | grep expiresAt
-    then
-        echo "iam role configured to allow ecr access"
-    else
-        echo "key and secret not mounted as secret, declared as variables or available from iam role"
-        exit 1
-    fi
+    echo "Error: ECR access not configured."
+    exit 1
 fi
 
 # update the auth token
