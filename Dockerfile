@@ -1,12 +1,8 @@
 FROM nginx:1.18.0-alpine
 
-RUN apk -v --update add \
-        python \
-        py-pip \
-        && \
-    pip install --upgrade pip awscli==1.11.92 && \
-    apk -v --purge del py-pip && \
-    rm /var/cache/apk/*
+RUN apk add --no-cache \
+    --repository http://dl-cdn.alpinelinux.org/alpine/v3.12/community \
+    aws-cli
 
 ADD configs/nginx/nginx.conf /etc/nginx/nginx.conf
 ADD configs/nginx/ssl /etc/nginx/ssl
