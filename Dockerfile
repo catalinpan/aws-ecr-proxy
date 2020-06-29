@@ -1,4 +1,4 @@
-FROM nginx:1.12.0-alpine
+FROM nginx:1.18.0-alpine
 
 RUN apk -v --update add \
         python \
