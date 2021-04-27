@@ -4,6 +4,7 @@ nx_conf=/etc/nginx/nginx.conf
 
 AWS_IAM='http://169.254.169.254/latest/dynamic/instance-identity/document'
 AWS_FOLDER='/root/.aws'
+DEFAULT_RESOLVERS='8.8.8.8 8.8.4.4'
 
 header_config() {
     mkdir -p ${AWS_FOLDER}
@@ -70,6 +71,11 @@ else
     fi
 fi
 
+if [ "$DNS_RESOLVERS" = "" ]
+then 
+    DNS_RESOLVERS=$DEFAULT_RESOLVERS
+fi
+
 # update the auth token
 if [ "$REGISTRY_ID" = "" ]
 then 
@@ -84,6 +90,7 @@ reg_url=$(echo "${aws_cli_exec}" | awk '{print $7}')
 
 sed -i "s|${auth%??}|${auth_n}|g" ${nx_conf}
 sed -i "s|REGISTRY_URL|$reg_url|g" ${nx_conf}
+sed -i "s|DNS_RESOLVERS|$DNS_RESOLVERS|g" ${nx_conf}
 
 /renew_token.sh &
 

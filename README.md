@@ -79,6 +79,10 @@ with region as environment variable and credentials from IAM role
 ```
 docker run -e REGION='YOUR_AWS_REGION' -d catalinpan/aws-ecr-proxy
 ```
+when running in a private VPC
+```
+docker run -e DNS_RESOLVERS=169.254.169.253 -d catalinpan/aws-ecr-proxy
+```
 
 ## SSL
 The certificates included are just to get nginx started. Generate your own certificate, get valid ssl certificates or use the container behind a load balancer with valid SSL certificates.
